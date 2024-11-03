@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   useContext,
   createContext,
@@ -18,10 +18,9 @@ const MenuContext = createContext<MenuContextType | null>(null);
 const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, toggleMenu] = useState<boolean>(true);
   return (
-    <MenuContext.Provider value= {{ isOpen, toggleMenu }
-}>
-  { children }
-  </MenuContext.Provider>
+    <MenuContext.Provider value={{ isOpen, toggleMenu }}>
+      {children}
+    </MenuContext.Provider>
   );
 };
 const useMenu = () => {

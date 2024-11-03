@@ -1,63 +1,78 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import { useCall, VideoPreview } from '@stream-io/video-react-sdk'
-import Button from '../button/simple_button'
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  useCall,
+  VideoPreview,
+  DeviceSettings,
+} from "@stream-io/video-react-sdk";
+import Button from "../button/simple_button";
 
-
-import { FaMicrophone } from "react-icons/fa";
+import { MdCallEnd } from "react-icons/md";
+import { IoMdCall } from "react-icons/io";
+import { HiOutlineMicrophone } from "react-icons/hi2";
 import { CiVideoOn } from "react-icons/ci";
-import { DeviceSettings } from '@stream-io/video-react-sdk';
-export default function Setup() {
 
-    const [isVideoAllowed, setVideoAllowed] = useState(false)
-    const [isAudioAllowed, setAudioAllowed] = useState(false)
-    const call = useCall()
+export default function Setup({ joinCall }: { joinCall: Function }) {
+  const [isVideoAllowed, setVideoAllowed] = useState(false);
+  const [isAudioAllowed, setAudioAllowed] = useState(false);
+  const call = useCall();
 
-    useEffect(() => {
-        if (!isVideoAllowed) {
-            call?.camera.enable()
-        }
-        else {
-            call?.camera.disable()
-        }
-        if (!isAudioAllowed) {
-            call?.microphone.enable()
-        }
-        else {
-            call?.microphone.disable()
-        }
-    }, [call, isAudioAllowed, isVideoAllowed])
+  useEffect(() => {
+    if (!isVideoAllowed) {
+      call?.camera.enable();
+    } else {
+      call?.camera.disable();
+    }
+    if (!isAudioAllowed) {
+      call?.microphone.enable();
+    } else {
+      call?.microphone.disable();
+    }
+  }, [call, isAudioAllowed, isVideoAllowed]);
 
-    return (
-        <div className='flex flex-col items-center justify-center h-screen'>
-
-
-            <div className='min-w-80 w-2/5 h-96  relative m-5'>
-                {
-                    !isVideoAllowed ? <>
-                        <VideoPreview className='w-full h-full rounded-lg' />
-                    </> :
-                        <>
-                            <div className='rounded-lg w-full h-full bg-2 font-bold flex flex-col items-center justify-center'>
-                                Video Disable
-                            </div>
-                        </>
-                }
-
+  return (
+    <>
+      <div className="flex justify-center items-center h-screen  flex-col">
+        <div className="relative h-100 w-80  sm:w-140  lg:w-200 flex items-center justify-center ">
+          {!isVideoAllowed ? (
+            <VideoPreview className="flex w-full h-full relative flex-col items-center justify-center mx-4 border-none outline-none"></VideoPreview>
+          ) : (
+            <div className="w-full h-full bg-2 flex flex-col items-center justify-center gap-3">
+              <CiVideoOn className="w-16 h-16 sm:w-24 sm:h-24  lg:w-36 lg:h-36 bg-4 p-5 rounded-full" />
+              <h1>Turn your camera on</h1>
             </div>
-            <div className='flex gap-4'>
-                <Button className={`${isAudioAllowed ? 'bg-red-600' : 'bg-transparent'}`} onClick={() => setAudioAllowed(prev => !prev)}>
-                    <FaMicrophone className='w-5 h-5 fill-white' />
-                </Button>
-
-                <Button className={`${isVideoAllowed ? 'bg-red-600' : 'bg-transparent'}`} onClick={() => setVideoAllowed(prev => !prev)}><CiVideoOn className='w-5 h-5 fill-white' /></Button>
-
-                <Button className='bg-2 px-4'>Join Meeting</Button>
-                <Button className='bg-red-600 px-4'>Cancel</Button>
-                <DeviceSettings />
-
-            </div>
-
+          )}
         </div>
-    )
+
+        <div className="flex gap-4 mx-auto border-2 w-fit my-5">
+          <Button
+            className={`${isAudioAllowed ? "bg-red-600" : "bg-4"}`}
+            onClick={() => setAudioAllowed((prev) => !prev)}
+          >
+            <HiOutlineMicrophone className="w-5 h-5 fill-white" />
+          </Button>
+
+          <Button
+            className={`${isVideoAllowed ? "bg-red-600" : "bg-4"}`}
+            onClick={() => setVideoAllowed((prev) => !prev)}
+          >
+            <CiVideoOn className="w-5 h-5 fill-white" />
+          </Button>
+
+          <Button
+            className="bg-4 md:px-4 hover:bg-2 text-white"
+            onClick={() => joinCall()}
+          >
+            <IoMdCall className="w-5 h-5" />
+            <span className="hidden md:inline">Join Meeting</span>
+          </Button>
+          <Button className="bg-red-600 md:px-4 text-white">
+            <MdCallEnd className="w-5 h-5" />
+            <span className="hidden md:inline">Cancel</span>
+          </Button>
+          <DeviceSettings></DeviceSettings>
+        </div>
+      </div>
+    </>
+  );
 }

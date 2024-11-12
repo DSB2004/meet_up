@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useCall,
   VideoPreview,
@@ -12,22 +12,31 @@ import { IoMdCall } from "react-icons/io";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import { CiVideoOn } from "react-icons/ci";
 
+
 export default function Setup({ joinCall }: { joinCall: Function }) {
+ 
   const [isVideoAllowed, setVideoAllowed] = useState(false);
   const [isAudioAllowed, setAudioAllowed] = useState(false);
   const call = useCall();
 
   useEffect(() => {
-    if (!isVideoAllowed) {
-      call?.camera.enable();
-    } else {
-      call?.camera.disable();
-    }
-    if (!isAudioAllowed) {
+    try{
+
+      if (navigator)
+        if (isVideoAllowed) {
+          call?.camera.enable();
+      } else {
+        call?.camera.disable();
+      }
+    if (isAudioAllowed) {
       call?.microphone.enable();
     } else {
       call?.microphone.disable();
     }
+  }catch(err){
+    
+  }
+
   }, [call, isAudioAllowed, isVideoAllowed]);
 
   return (

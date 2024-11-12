@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Wrapper from '@/components/header/wrapper';
-import Menu from '@/components/header/menu';
 import dynamic from 'next/dynamic';
 
 
@@ -12,12 +11,9 @@ const UserButton = dynamic(() => import('@clerk/nextjs').then(mod => mod.UserBut
 export default function Header() {
     return (
         <Wrapper>
-            <Menu />
-
             <SignedIn>
                 <UserButton />
             </SignedIn>
-
         </Wrapper>
     );
 }

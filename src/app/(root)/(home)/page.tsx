@@ -1,55 +1,24 @@
 "use client";
-import React  from "react";
-import BackgroundImage from "@/assets/background.webp";
-import Timer from "@/components/timer";
-import ColorCard from "@/components/card/color_card";
-
-import { FaCalendar } from "react-icons/fa";
-import { BiSolidVideoRecording } from "react-icons/bi";
-import { IoMdAdd } from "react-icons/io";
-import { RiUserAddLine } from "react-icons/ri";
-
+import React from "react";
+import Input from "@/components/input/input";
 import useMeet from "@/hooks/use-meet";
-
+import Button from "@/components/button/simple_button";
 export default function Page() {
-  const { createMeet } = useMeet();
+  const { createMeet, joinMeet } = useMeet();
   return (
     <>
-      <div
-        className="h-80 rounded-xl bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${BackgroundImage.src})` }}
-      >
-        <Timer></Timer>
-      </div>
+      <div className=" ml-0 md:ml-10 mt-5 sm:mt-20">
+        <h3 className="text-lg sm:text-xl lg:text-2xl mt-5 font-bold text-orange-400">Connect and Collaborate, Anytime, Anywhere</h3>
+        <h1 className="text-2xl  sm:text-3xl lg:text-6xl mt-5 font-bold text-white w-full sm:w-5/6 sm:min-w-96 ">Seamless Video Meetings for Teams, Clients, and Communities</h1>
+        <p className="text-xs sm:text-sm lg:text-base mt-5  text-white w-full sm:w-4/6 sm:min-w-96 ">Experience high-quality video, audio, and screen sharing with just one click. Our platform is designed for simplicity and reliability, so you can focus on what matters—whether it’s a quick catch-up, a team brainstorming session, or a large virtual event. Join or host secure meetings from any device, with tools to keep everyone engaged and connected.</p>
 
-      <div className="my-5 pb-5 grid gap-4 grid-cols-1 sm:grid-cols-2  lg:grid-cols-3  2xl:grid-cols-4 place-items-center">
-        <ColorCard
-          className="bg-orange-500"
-          icon={<IoMdAdd className="w-6 h-6" />}
-          title="New Meeting"
-          desc="Setup a new meeting"
-          onClick={() => createMeet()}
-        />
+        <Button className="bg-4 my-5  px-4" onClick={() => { createMeet() }}>Create Instant Meeting</Button>
 
-        <ColorCard
-          className="bg-blue-700"
-          icon={<RiUserAddLine className="w-6 h-6" />}
-          title="Join meeting"
-          desc="Via invitation link"
-        ></ColorCard>
-        <ColorCard
-          className="bg-violet-700"
-          icon={<FaCalendar className="w-6 h-6" />}
-          title="Schedule Meeting"
-          desc="Plan your meeting"
-        ></ColorCard>
-        <ColorCard
-          className="bg-yellow-500"
-          title="View Recording"
-          desc="Meeting recording"
-          icon={<BiSolidVideoRecording className="w-6 h-6" />}
-        ></ColorCard>
-      </div>
+        <form onSubmit={joinMeet}>
+          <Input name="room-id" placeholder="Enter Code..." className="bg-transparent w-72 border-4 mt-5" />
+          <Button className="bg-4 my-5 px-4">Or Join Meeting</Button>
+        </form>
+      </div >
     </>
   );
 }

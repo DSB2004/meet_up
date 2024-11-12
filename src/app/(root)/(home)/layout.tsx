@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Navbar from "./navbar";
 import Header from "./header";
 export const metadata: Metadata = {
     title: "MeetUp: All is one solution to online meets",
@@ -13,7 +12,6 @@ export default function RootLayout({
 }>) {
     return (
         <main className="w-full flex">
-            <Navbar></Navbar>
             <div className="h-screen w-full relative overflow-y-auto">
                 <Header></Header>
                 <div className=" text-3 m-3 ">

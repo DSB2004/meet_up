@@ -4,13 +4,13 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useToast } from "./use-toast";
 import { FormEvent } from "react";
-import { Description } from "@radix-ui/react-toast";
-
+import { useCall } from "@stream-io/video-react-sdk";
 export default function useMeet() {
   const router = useRouter();
   const client = useStreamVideoClient();
   const user = useUser();
-  const { toast } = useToast()
+  const call = useCall();
+  const { toast } = useToast();
   async function createMeet() {
     if (!client) {
       throw new Error("Client not created");
@@ -32,13 +32,15 @@ export default function useMeet() {
     router.push(`/meet/${call.id}`);
   }
 
-
   async function joinMeet(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const id = formData.get('room-id') as string;
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const id = formData.get("room-id") as string;
     if (!id) {
-      toast({ title: "Invalid Code", description: "Please enter a valid invite code" })
+      toast({
+        title: "Invalid Code",
+        description: "Please enter a valid invite code",
+      });
       return;
     }
     if (!client) {
@@ -49,14 +51,33 @@ export default function useMeet() {
     }
 
     try {
-      const call = client.call("default", id);
-      await call.join()
+      client.call("default", id);
     } catch (err) {
-      toast({ title: "Invalid Code", description: "Please enter a valid invite code" })
+      toast({
+        title: "Invalid Code",
+        description: "Please enter a valid invite code",
+      });
       return;
     }
     router.push(`/meet/${id}`);
   }
 
-  return { createMeet, joinMeet };
+  const RegisterMeetEvent = () => {
+    call?.on("participantJoined", (event) => {
+      console.log(event);
+      toast({
+        title: "New Member",
+        description: event.participant?.name + " has joined the meeting",
+      });
+    });
+    call?.on("participantLeft", (event) => {
+      console.log(event);
+      toast({
+        title: "Member Left",
+        description: event.participant?.name + " has lefted the meeting",
+      });
+    });
+  };
+
+  return { createMeet, joinMeet, RegisterMeetEvent };
 }

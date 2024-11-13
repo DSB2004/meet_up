@@ -5,6 +5,7 @@ import { Chat } from "stream-chat-react";
 import { useUser } from "@clerk/nextjs";
 import { ReactNode, useEffect, useState } from "react";
 import { tokenProvider } from "@/actions/stream.actions";
+import Loading from "@/components/loading/loading";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_APP_API_KEY as string;
 
@@ -51,13 +52,15 @@ const StreamProvider = ({ children }: { children: ReactNode }) => {
   }, [user, isLoaded]);
 
   if (!videoClient || !chatClient) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   return (
-    <StreamVideo client={videoClient}>
-      <Chat client={chatClient}>{children}</Chat>
-    </StreamVideo>
+    <>
+      <StreamVideo client={videoClient}>
+        <Chat client={chatClient}>{children}</Chat>
+      </StreamVideo>
+    </>
   );
 };
 

@@ -1,16 +1,47 @@
-import React, { ReactNode, useState } from "react";
-import { LuMenu } from "react-icons/lu";
-export default function Wrapper({ children }: { children: ReactNode }) {
+import React, { ReactNode, useState, useEffect } from "react";
+import { IoChatbubbleEllipses } from "react-icons/io5";
+import { useToast } from "@/hooks/use-toast";
+import { DefaultGenerics, Channel } from "stream-chat";
+import { Event } from "stream-chat";
+export default function Wrapper({
+  children,
+  channel,
+}: {
+  children: ReactNode;
+  channel?: Channel<DefaultGenerics>;
+}) {
   const [isOpen, toggleOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleNewMessage = (event: Event<DefaultGenerics>) => {
+    toast({
+      title: event.message?.user?.name || "User",
+      description: event.message?.text,
+    });
+  };
+
+  useEffect(() => {
+    if (isOpen === false) {
+      if (channel) {
+        channel?.on("message.new", handleNewMessage);
+      }
+      return () => {
+        channel?.off("message.new", handleNewMessage);
+      };
+    }
+  }, [channel, isOpen]);
 
   return (
-    <div style={{zIndex:500}} className={`fixed top-0 right-0 lg:relative z-50  h-screen  ml-auto `}>
+    <div
+      style={{ zIndex: 500 }}
+      className={`fixed top-0 right-0 lg:relative z-50  h-screen  ml-auto `}
+    >
       <div className="flex justify-center gap-2 align-top h-full">
-        <LuMenu
-        title="Open Chat"
+        <IoChatbubbleEllipses
+          title="Open Chat"
           className="w-6 h-6 mt-2"
           onClick={() => toggleOpen((prev) => !prev)}
-        ></LuMenu>
+        />
         <div
           className={`${
             isOpen ? "w-90" : "w-0"
@@ -22,4 +53,3 @@ export default function Wrapper({ children }: { children: ReactNode }) {
     </div>
   );
 }
-//

@@ -12,38 +12,32 @@ import { IoMdCall } from "react-icons/io";
 import { HiOutlineMicrophone } from "react-icons/hi2";
 import { CiVideoOn } from "react-icons/ci";
 
-
 export default function Setup({ joinCall }: { joinCall: Function }) {
- 
-  const [isVideoAllowed, setVideoAllowed] = useState(false);
-  const [isAudioAllowed, setAudioAllowed] = useState(false);
+  const [isVideoAllowed, setVideoAllowed] = useState(true);
+  const [isAudioAllowed, setAudioAllowed] = useState(true);
   const call = useCall();
 
   useEffect(() => {
-    try{
-
+    try {
       if (navigator)
         if (isVideoAllowed) {
           call?.camera.enable();
+        } else {
+          call?.camera.disable();
+        }
+      if (isAudioAllowed) {
+        call?.microphone.enable();
       } else {
-        call?.camera.disable();
+        call?.microphone.disable();
       }
-    if (isAudioAllowed) {
-      call?.microphone.enable();
-    } else {
-      call?.microphone.disable();
-    }
-  }catch(err){
-    
-  }
-
+    } catch (err) {}
   }, [call, isAudioAllowed, isVideoAllowed]);
 
   return (
     <>
       <div className="flex justify-center items-center h-screen  flex-col">
         <div className="relative h-100 w-80  sm:w-140  lg:w-200 flex items-center justify-center ">
-          {!isVideoAllowed ? (
+          {isVideoAllowed ? (
             <VideoPreview className="flex w-full h-full relative flex-col items-center justify-center mx-4 border-none outline-none"></VideoPreview>
           ) : (
             <div className="w-full h-full bg-2 flex flex-col items-center justify-center gap-3">
@@ -55,14 +49,14 @@ export default function Setup({ joinCall }: { joinCall: Function }) {
 
         <div className="flex gap-4 mx-auto border-2 w-fit my-5">
           <Button
-            className={`${isAudioAllowed ? "bg-red-600" : "bg-4"}`}
+            className={`${!isAudioAllowed ? "bg-red-600" : "bg-4"}`}
             onClick={() => setAudioAllowed((prev) => !prev)}
           >
             <HiOutlineMicrophone className="w-5 h-5 fill-white" />
           </Button>
 
           <Button
-            className={`${isVideoAllowed ? "bg-red-600" : "bg-4"}`}
+            className={`${!isVideoAllowed ? "bg-red-600" : "bg-4"}`}
             onClick={() => setVideoAllowed((prev) => !prev)}
           >
             <CiVideoOn className="w-5 h-5 fill-white" />

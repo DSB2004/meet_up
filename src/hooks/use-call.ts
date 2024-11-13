@@ -20,5 +20,9 @@ export function useCall(id: string | string[]) {
         loadCall()
 
     }, [client, id])
+
+
+
+    
     return { loading, call }
 }

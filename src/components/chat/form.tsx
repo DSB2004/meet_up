@@ -3,6 +3,7 @@ import { useChannelActionContext } from "stream-chat-react";
 import { IoSend } from "react-icons/io5";
 export default function Form() {
   const { sendMessage } = useChannelActionContext();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formdata = new FormData(e.currentTarget);
@@ -10,11 +11,13 @@ export default function Form() {
     e.currentTarget.reset();
     await sendMessage({ text: message });
   };
+
+
   return (
     <form
       onSubmit={handleSubmit}
       className="mt-auto flex justify-between gap-2 p-4"
-      style={{ maxHeight: "60px" }}
+      style={{ minHeight: "60px" }}
     >
       <input
         name="message"
